@@ -1,13 +1,13 @@
 SEMARC Version of the PicoRX
 ============================
 
-As a group we have taken Jon's design and created:
+As a group we have taken Jon Dawson's design and created:
 
 + Our own PCB
 + The Box
 + Modifications to the Code
 
-How we modify this fork is up to us as a group. I'm going to suggest that we have a *SEMARC* folder that contains our PCB and Box designs. But we *shouldn't* put code changes in there. I susgest that we put code changes in branches, and then decide as a group whether to include these in the main branch, or maybe even consider submitting pull requests to Jon's original repository.
+How we modify this fork is up to us as a group. I'm going to suggest that we have a *SEMARC* folder that contains our PCB and Box designs. But we *shouldn't* put code changes in there. I suggest that we put code changes in branches, and then decide as a group whether to include these in the main branch, or maybe even consider submitting pull requests to Jon's original repository.
 
 Pi Pico Rx - A crystal radio for the digital age?
 =================================
