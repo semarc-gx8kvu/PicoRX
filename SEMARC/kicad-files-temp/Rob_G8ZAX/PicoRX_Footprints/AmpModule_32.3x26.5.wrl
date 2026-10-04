@@ -1,0 +1,58 @@
+#VRML V2.0 utf8
+WorldInfo { title "AmpModule_32.3x26.5" }
+NavigationInfo { type ["EXAMINE", "ANY"] }
+
+Transform {
+  translation 0.000000 0.000000 0.000800
+  children [
+    Shape {
+      appearance Appearance { material Material { diffuseColor 0.1 0.0 0.2 } }
+      geometry Box { size 0.032300 0.026500 0.001600 }
+    }
+  ]
+}
+Transform {
+  translation 0.009650 0.000000 0.007100
+  children [
+    Shape {
+      appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } }
+      geometry Cylinder { radius 0.004000 height 0.011000 }
+    }
+  ]
+}
+Transform {
+  translation -0.001500 0.000000 0.002400
+  children [
+    Shape {
+      appearance Appearance { material Material { diffuseColor 0.05 0.05 0.05 } }
+      geometry Box { size 0.010300 0.003900 0.001600 }
+    }
+  ]
+}
+Transform {
+  translation -0.003740 -0.010710 0.002850
+  children [
+    Shape {
+      appearance Appearance { material Material { diffuseColor 0.1 0.1 0.1 } }
+      geometry Box { size 0.009620 0.004000 0.002500 }
+    }
+  ]
+}
+Transform {
+  translation -0.005010 0.010710 0.002850
+  children [
+    Shape {
+      appearance Appearance { material Material { diffuseColor 0.1 0.1 0.1 } }
+      geometry Box { size 0.007080 0.004000 0.002500 }
+    }
+  ]
+}
+Transform {
+  translation 0.007250 0.010710 0.002850
+  children [
+    Shape {
+      appearance Appearance { material Material { diffuseColor 0.1 0.1 0.1 } }
+      geometry Box { size 0.004540 0.004000 0.002500 }
+    }
+  ]
+}

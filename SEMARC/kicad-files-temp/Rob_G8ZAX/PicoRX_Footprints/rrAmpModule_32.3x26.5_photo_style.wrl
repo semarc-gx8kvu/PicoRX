@@ -1,0 +1,340 @@
+#VRML V2.0 utf8
+WorldInfo { title "AmpModule_32.3x26.5_photo_style" }
+NavigationInfo { type ["EXAMINE", "ANY"] }
+
+Transform {
+  translation 0.000000 0.000000 0.000800
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.450 0.100 0.500
+          transparency 0.000
+        }
+      }
+      geometry Box { size 0.032300 0.026500 0.001600 }
+    }
+  ]
+}
+Transform {
+  translation 0.000000 0.000000 0.001625
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.550 0.150 0.600
+          transparency 0.350
+        }
+      }
+      geometry Box { size 0.032100 0.026300 0.000050 }
+    }
+  ]
+}
+Transform {
+  translation -0.007550 -0.010710 0.001650
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.850 0.700 0.150
+          transparency 0.000
+        }
+      }
+      geometry Cylinder { radius 0.000850 height 0.000100 }
+    }
+  ]
+}
+Transform {
+  translation -0.005010 -0.010710 0.001650
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.850 0.700 0.150
+          transparency 0.000
+        }
+      }
+      geometry Cylinder { radius 0.000850 height 0.000100 }
+    }
+  ]
+}
+Transform {
+  translation -0.002470 -0.010710 0.001650
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.850 0.700 0.150
+          transparency 0.000
+        }
+      }
+      geometry Cylinder { radius 0.000850 height 0.000100 }
+    }
+  ]
+}
+Transform {
+  translation 0.000070 -0.010710 0.001650
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.850 0.700 0.150
+          transparency 0.000
+        }
+      }
+      geometry Cylinder { radius 0.000850 height 0.000100 }
+    }
+  ]
+}
+Transform {
+  translation -0.007550 0.010710 0.001650
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.850 0.700 0.150
+          transparency 0.000
+        }
+      }
+      geometry Cylinder { radius 0.000850 height 0.000100 }
+    }
+  ]
+}
+Transform {
+  translation -0.005010 0.010710 0.001650
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.850 0.700 0.150
+          transparency 0.000
+        }
+      }
+      geometry Cylinder { radius 0.000850 height 0.000100 }
+    }
+  ]
+}
+Transform {
+  translation -0.002470 0.010710 0.001650
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.850 0.700 0.150
+          transparency 0.000
+        }
+      }
+      geometry Cylinder { radius 0.000850 height 0.000100 }
+    }
+  ]
+}
+Transform {
+  translation 0.005980 0.010710 0.001650
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.850 0.700 0.150
+          transparency 0.000
+        }
+      }
+      geometry Cylinder { radius 0.000850 height 0.000100 }
+    }
+  ]
+}
+Transform {
+  translation 0.008520 0.010710 0.001650
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.850 0.700 0.150
+          transparency 0.000
+        }
+      }
+      geometry Cylinder { radius 0.000850 height 0.000100 }
+    }
+  ]
+}
+Transform {
+  translation -0.001500 0.000000 0.002400
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.050 0.050 0.050
+          transparency 0.000
+        }
+      }
+      geometry Box { size 0.010300 0.003900 0.001600 }
+    }
+  ]
+}
+Transform {
+  translation -0.007050 0.000000 0.001750
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.750 0.750 0.780
+          transparency 0.000
+        }
+      }
+      geometry Box { size 0.000600 0.004400 0.000300 }
+    }
+  ]
+}
+Transform {
+  translation 0.004050 0.000000 0.001750
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.750 0.750 0.780
+          transparency 0.000
+        }
+      }
+      geometry Box { size 0.000600 0.004400 0.000300 }
+    }
+  ]
+}
+Transform {
+  translation 0.009650 0.000000 0.007100
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.800 0.800 0.820
+          transparency 0.000
+        }
+      }
+      geometry Cylinder { radius 0.004000 height 0.011000 }
+    }
+  ]
+}
+Transform {
+  translation 0.009650 0.000000 0.012300
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.100 0.100 0.100
+          transparency 0.000
+        }
+      }
+      geometry Cylinder { radius 0.003800 height 0.000600 }
+    }
+  ]
+}
+Transform {
+  translation 0.004450 0.000000 0.003600
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.180 0.180 0.180
+          transparency 0.000
+        }
+      }
+      geometry Box { size 0.007500 0.007500 0.004000 }
+    }
+  ]
+}
+Transform {
+  translation -0.009000 -0.004500 0.002000
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.720 0.620 0.450
+          transparency 0.000
+        }
+      }
+      geometry Box { size 0.002000 0.001200 0.000800 }
+    }
+  ]
+}
+Transform {
+  translation -0.009000 0.004500 0.002000
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.720 0.620 0.450
+          transparency 0.000
+        }
+      }
+      geometry Box { size 0.002000 0.001200 0.000800 }
+    }
+  ]
+}
+Transform {
+  translation 0.003500 -0.004500 0.002000
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.720 0.620 0.450
+          transparency 0.000
+        }
+      }
+      geometry Box { size 0.002000 0.001200 0.000800 }
+    }
+  ]
+}
+Transform {
+  translation 0.003500 0.004500 0.002000
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.720 0.620 0.450
+          transparency 0.000
+        }
+      }
+      geometry Box { size 0.002000 0.001200 0.000800 }
+    }
+  ]
+}
+Transform {
+  translation -0.003740 -0.010710 0.002850
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.080 0.080 0.080
+          transparency 0.000
+        }
+      }
+      geometry Box { size 0.009620 0.004000 0.002500 }
+    }
+  ]
+}
+Transform {
+  translation -0.005010 0.010710 0.002850
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.080 0.080 0.080
+          transparency 0.000
+        }
+      }
+      geometry Box { size 0.007080 0.004000 0.002500 }
+    }
+  ]
+}
+Transform {
+  translation 0.007250 0.010710 0.002850
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.080 0.080 0.080
+          transparency 0.000
+        }
+      }
+      geometry Box { size 0.004540 0.004000 0.002500 }
+    }
+  ]
+}
