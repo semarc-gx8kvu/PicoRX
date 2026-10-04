@@ -1,0 +1,73 @@
+PicoMods 260323 23rd March 2026
+
+I have spotted three issues with the SEMARC MkI PicoRX pcb:
+
+1. 4k7 pull-ups going to +5V instead of +3V,
+2. Some 0V areas are not connected to 0V and
+3. The op-amps + and - input legs are swapped over.
+
+
+
+It is possible to make the necessary modifications without too much difficulty, 
+though that does depend a bit on the user's skill and eyesight levels.
+
+Items 1 and 2 are both covered by drawings scanPico-RX_TOP.jpg and scanPicoRX_BOT.jpg.
+Essentially TWO tracks need to be cut, one on the top of the pcb and one on the bottom.
+I use a scalpel and make a small nick in the track, then I use a multimeter 
+in continuity mode to ensure the ends of that track no longer conduct.
+
+It makes sense to wait a bit and leave THREE of the wire links until the op-amp is soldered in,
+because Issue 3 involves some work on said op-amp.
+
+Meanwhile MOST of the links may be added at this stage. Links 4, 5 and 7 can be made now.
+I use a small (2.5mm) flat screwdriver to scrape away at the green solder resist layers until
+nice shiny pink copper is seen. Aim to clean square areas of 2 to 3mm each side.
+These can then be tinned: apply soldering iron for perhaps 8 seconds (depending on iron's power
+rating) then add a covering/blob of solder to the copper area.
+
+Then join each pair of two areas with some wire. I think I used PVC-insulated wire marked 0.5mm and
+I stripped off all the insulation for these 3 links. My photos may make the final result clear.
+
+The last two links, marked 6 and 100R are different in that the green resist does not require removal
+and Link 6 is done with 0.5mm insulated wire with the insulation left intact. The 100R link connects
+3V to the 4k7 pull-up resistors mentioned in Issue 1. I used a 100 ohm resistor so that I could
+be sure my modification worked. An insulated wire link could be used instead similar to Link 6.
+
+
+
+Nearly finally, Issue 3 can be dealt with in one of two methods. 
+
+METHOD 1. Because I soldered an 8-pin DIL socket, I could not bend the IC legs 
+as someone kindly suggested, so I cut THREE more tracks on the top of the
+pcb, as shown in scanPicoRX_top_iss2.jpg, and another track on the bottom 
+as per scanPicoRX_bot_iss2.jpg. I then added insulated wire links 8, 9, 10 and 11.
+
+METHOD 2. This could be much easier if the op-amp has not been soldered in.
+Bend FOUR of its legs out at an angle of 45 to 90 degrees. The legs can be bent 
+once, slowly, with no problems. Drawing scanPicoRXiclegs.jpg should make this
+reasonably clear. Note the pins 2 and 3 are on the middle of one side.
+Note also that pins 5 and 6 are not in the middle of the other side, but offset.
+
+FOUR lengths of thin insulated wire can be stripped such that about 4mm of insulation is left.
+This is important because each pair must crossover such that pcb hole for pin 2 must go to leg 3
+and pcb hole pin 3 must connect to leg 2. I would use 'wire-wrapping' grade wire as it is very
+thin and one end can be wrapped around a bent IC leg and then soldered on.
+
+Once all four wires are soldered on the bent legs, the IC can then be pushed onto the pcb
+such that these wires go into the relevant holes.
+
+
+FINALLY, once the IC is soldered using either of the above methods, the remaining THREE
+links can be soldered onto pin 4 of the IC. One of those three links should be made with
+insulated wire but the others can be bare wire. Images IMG_20250323_NNNNNN show the top and bottom
+views of my PicoRX with varying zoom and light levels.
+
+
+
+
+
+
+
+
+
+

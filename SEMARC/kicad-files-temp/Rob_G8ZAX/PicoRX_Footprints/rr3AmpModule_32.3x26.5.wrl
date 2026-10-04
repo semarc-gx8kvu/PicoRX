@@ -1,0 +1,62 @@
+#VRML V2.0 utf8
+# PAM8406 Module with accurate Capacitor colors
+# Dimensions: 32.3mm x 26.5mm
+
+Group {
+  children [
+    # PCB Body - Deep Purple
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.35 0.1 0.45 
+          specularColor 0.2 0.2 0.2
+          shininess 0.4
+        }
+      }
+      geometry Box { size 32.3 26.5 1.6 }
+    }
+
+    # Capacitor Body - Brushed Aluminum Silver
+    Transform {
+      translation 10.0 -2.0 4.8
+      children [
+        Shape {
+          appearance Appearance {
+            material Material { 
+              diffuseColor 0.75 0.75 0.75 
+              specularColor 0.9 0.9 0.9
+              shininess 0.8
+            }
+          }
+          geometry Cylinder { radius 4.5 height 8.0 }
+        }
+      ]
+    }
+
+    # Capacitor Top Detail - Dark marking area
+    Transform {
+      translation 10.0 -2.0 8.85
+      children [
+        Shape {
+          appearance Appearance {
+            material Material { diffuseColor 0.1 0.1 0.1 }
+          }
+          geometry Cylinder { radius 4.4 height 0.1 }
+        }
+      ]
+    }
+
+    # PAM8406 IC
+    Transform {
+      translation -2.0 0 1.2
+      children [
+        Shape {
+          appearance Appearance {
+            material Material { diffuseColor 0.05 0.05 0.05 }
+          }
+          geometry Box { size 5.0 6.0 1.0 }
+        }
+      ]
+    }
+  ]
+}

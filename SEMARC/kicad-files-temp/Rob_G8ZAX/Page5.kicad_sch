@@ -1,0 +1,13 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "b63a511c-04fd-4998-bd58-c5eab331800e")
+	(paper "A4")
+	(title_block
+		(title "Band Filter")
+		(company "Zaxsoft Ltd")
+		(comment 1 "G8ZAX")
+	)
+	(lib_symbols)
+)

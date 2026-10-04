@@ -1,0 +1,378 @@
+G3ZBU mods to 'tft' branch of Jon Dawson's PicoRX. 7th March 2026
+
+=================================================================
+
+On Windows 10 PC I, as admin, installed WSL Ububtu.
+
+Using WSL, do these:
+	
+	sudo apt install -y git cmake gcc cmake gcc=arm-none-eabi build-essential libnewlib-arm-noeabi python3
+	git clone https://github.com/raspberrypi/pico-sdk.git
+	cd pico-sdk
+	git submodule update --init
+	echo 'export PICO_SDK_PATH=$HOME/pico-sdk' >> ~/.bashrc
+	source ~/.bashrc
+	cd ~
+	git clone --recursive https://github.com/dawsonjon/PicoRX.git
+	cd PicoRX/
+	git branch -a
+	git checkout tft
+	git submodule update --init --recursive
+	mkdir build
+	cd build
+	cmake -DPICO_BOARD=pico ..
+
+You will see errors!
+	
+
+I had to manually git clone no-OS-FatFS-SD-SDIO-SPI-RPi-Pico into the external subdirectory.
+
+	cd external
+	git clone https://github.com/carlk3/no-OS-FatFS-SD-SDIO-RPi-Pico.git
+	git clone https://github.com/carlk3/no-OS-FatFS.git
+
+Then repeat the last few instructions for cmake. There will still be errors so the two CMakeLists.txt
+files will need a few mods, see below! Then repeat cmake   
+
+I also added a link to f_util.h but that may be superfluous...
+	ln -s include/f_util.h f_util.h
+
+Finally you should be able to do this, from root directory:
+
+	cd PicoRX
+	./build_all 
+I got errors with the Pico2/RiscV build but ignored them.
+You can edit the software then 
+	
+	cd build
+	make
+
+or make j 4 to use 4 cores.
+
+Press the white reset button down, connect the Pico's USB port to a PC, then release the button.
+Copy the file build/picorx.uf2 into your Pico. It should run!
+
+
+FILE MODS:
+=================================================================
+
+PicoRX/CmakeLists.txt:
+
+
+cmake_minimum_required(VERSION 3.12)
+set(FETCHCONTENT_QUIET FALSE)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# If an SDK path has not been configured in the environemnt, use CMake's
+# FetchContent to pull down the SDK sources from GitHub.
+if(NOT DEFINED ENV{PICO_SDK_PATH})
+    set(ENV{PICO_SDK_FETCH_FROM_GIT} "1")
+    set(ENV{PICO_SDK_FETCH_FROM_GIT_TAG} "2.1.0")
+    set(ENV{PICOTOOL_FORCE_FETCH_FROM_GIT} "1")
+    set(ENV{PICOTOOL_FETCH_FROM_GIT_PATH} "${CMAKE_BINARY_DIR}/picotool-build")
+endif()
+
+# Ensure GNU size tool is defined
+find_program(CMAKE_SIZE arm-none-eabi-size)
+if (NOT CMAKE_SIZE)
+    message(FATAL_ERROR "arm-none-eabi-size not found — is the ARM toolchain in your PATH?")
+endif()
+
+
+include(pico_sdk_import.cmake)
+
+project(picorx
+LANGUAGES
+    C
+    CXX
+VERSION
+    0.0.1
+)
+
+pico_sdk_init()
+
+set(CMAKE_C_STANDARD 11)
+
+add_compile_options(-Wall -Werror -Wextra -Wshadow -Wstack-usage=2048
+                    -fdata-sections -ffunction-sections -Wno-missing-field-initializers)
+add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-fno-rtti>)
+add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-fno-exceptions>)
+
+file(GLOB_RECURSE U8G2_SRCS
+    CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_LIST_DIR}/external/u8g2/csrc/*.c"
+)
+
+file(GLOB_RECURSE U8G2_HDRS
+    CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_LIST_DIR}/external/u8g2/csrc/*.c"
+)
+
+add_library(u8g2)
+target_sources(u8g2 PRIVATE ${U8G2_SRCS} ${U8G2_HDRS})
+target_compile_options(u8g2 PRIVATE -Wno-unused-function -Wno-unused-variable)
+target_include_directories(u8g2 PUBLIC ${CMAKE_CURRENT_LIST_DIR}/external/u8g2/csrc/)
+
+include(external/no-OS-FatFS-SD-SDIO-SPI-RPi-Pico/src/CMakeLists.txt)
+
+set(PICORX_SRCS
+    ${CMAKE_CURRENT_LIST_DIR}/ssd1306.c
+    ${CMAKE_CURRENT_LIST_DIR}/picorx.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/nco.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/rx.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/rx_dsp.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/fft.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/fft_filter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/noise_reduction.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/rnn_denoiser.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cic_corrections.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ui.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/settings.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/memory.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/autosave_memory.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/utils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ili934x.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/waterfall.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/button.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/quadrature_si5351.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cat.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/pwm_audio_sink.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/usb_descriptors.c
+    ${CMAKE_CURRENT_LIST_DIR}/usb_audio_device.c
+    ${CMAKE_CURRENT_LIST_DIR}/sdcard.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ring_buffer_lib.c
+    ${CMAKE_CURRENT_LIST_DIR}/codecs/sstv_decoder.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/codecs/sstv_decoder_picorx.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/codecs/cordic.cpp
+)
+
+set(PICORX_LIBS
+    pico_stdlib
+    pico_multicore
+    hardware_clocks
+    hardware_flash
+    hardware_pio
+    hardware_adc
+    hardware_pwm
+    hardware_dma
+    hardware_i2c
+    hardware_spi
+    hardware_exception
+    tinyusb_device
+    tinyusb_board
+    u8g2
+    no-OS-FatFS-SD-SDIO-SPI-RPi-Pico
+)
+
+if(BUTTON_ENCODER)
+    add_definitions(-DBUTTON_ENCODER)
+    list(APPEND PICORX_SRCS ${CMAKE_CURRENT_LIST_DIR}/button_encoder.cpp)
+else()
+    list(APPEND PICORX_SRCS ${CMAKE_CURRENT_LIST_DIR}/rotary_encoder.cpp)
+endif()
+
+if(PICO_BOARD STREQUAL "pico")
+
+    list(APPEND PICORX_SRCS clocks_pico.cpp)
+    #main application
+    add_executable(picorx ${PICORX_SRCS})
+    target_compile_features(picorx PUBLIC c_std_11)
+    pico_generate_pio_header(picorx ${CMAKE_CURRENT_LIST_DIR}/nco.pio)
+    pico_add_extra_outputs(picorx)
+    pico_enable_stdio_usb(picorx 1)
+    pico_enable_stdio_uart(picorx 0)
+
+    target_include_directories(picorx PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+    target_link_libraries(picorx PRIVATE ${PICORX_LIBS})
+    target_compile_definitions(picorx PUBLIC PICO_XOSC_STARTUP_DELAY_MULTIPLIER=128 PICO_STACK_SIZE=4096)
+    set_target_properties(picorx PROPERTIES SUFFIX ".elf")
+    add_custom_command(TARGET picorx POST_BUILD COMMAND ${CMAKE_SIZE} ${CMAKE_CURRENT_BINARY_DIR}/picorx.elf COMMENT "=== Memory / Code Size Report ===")
+
+    #battery check utility
+    add_executable(battery_check)
+    target_compile_features(battery_check PUBLIC c_std_11)
+    target_sources(battery_check PRIVATE ${CMAKE_CURRENT_LIST_DIR}/battery_check.cpp)
+    pico_add_extra_outputs(battery_check)
+    pico_enable_stdio_usb(battery_check 1)
+    pico_enable_stdio_uart(battery_check 0)
+    target_link_libraries(battery_check pico_stdlib hardware_adc)
+    set_target_properties(battery_check PROPERTIES SUFFIX ".elf")
+
+elseif(PICO_BOARD STREQUAL "pico2")
+
+    if(PICO_PLATFORM STREQUAL "rp2350-riscv")
+
+        list(APPEND PICORX_SRCS clocks_pico2.cpp)
+        #main application
+        add_executable(pico2rx-riscv ${PICORX_SRCS})
+        target_compile_features(pico2rx-riscv PUBLIC c_std_11)
+        pico_generate_pio_header(pico2rx-riscv ${CMAKE_CURRENT_LIST_DIR}/nco.pio)
+        pico_add_extra_outputs(pico2rx-riscv)
+        # enable usb output, disable uart output
+        pico_enable_stdio_usb(pico2rx-riscv 1)
+        pico_enable_stdio_uart(pico2rx-riscv 0)
+        target_include_directories(pico2rx-riscv PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+        target_link_libraries(pico2rx-riscv PRIVATE ${PICORX_LIBS})
+        target_compile_definitions(pico2rx-riscv PUBLIC PICO_XOSC_STARTUP_DELAY_MULTIPLIER=128 PICO_STACK_SIZE=4096)
+        set_target_properties(pico2rx-riscv PROPERTIES SUFFIX ".elf")
+        add_custom_command(TARGET pico2rx-riscv POST_BUILD COMMAND ${CMAKE_SIZE} ${CMAKE_CURRENT_BINARY_DIR}/pico2rx-riscv.elf COMMENT "=== Memory / Code Size Report ===")
+
+    else()
+
+        list(APPEND PICORX_SRCS clocks_pico2.cpp)
+        #main application
+        add_executable(pico2rx ${PICORX_SRCS})
+        target_compile_features(pico2rx PUBLIC c_std_11)
+        pico_generate_pio_header(pico2rx ${CMAKE_CURRENT_LIST_DIR}/nco.pio)
+        pico_add_extra_outputs(pico2rx)
+        pico_enable_stdio_usb(pico2rx 1)
+        pico_enable_stdio_uart(pico2rx 0)
+        target_include_directories(pico2rx PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+        target_link_libraries(pico2rx PRIVATE ${PICORX_LIBS})
+        target_compile_definitions(pico2rx PUBLIC PICO_XOSC_STARTUP_DELAY_MULTIPLIER=128 PICO_STACK_SIZE=4096)
+        set_target_properties(pico2rx PROPERTIES SUFFIX ".elf")
+        add_custom_command(TARGET pico2rx POST_BUILD COMMAND ${CMAKE_SIZE} ${CMAKE_CURRENT_BINARY_DIR}/pico2rx.elf COMMENT "=== Memory / Code Size Report ===")
+
+        #battery check utility
+        add_executable(battery_check_pico2)
+        target_compile_features(battery_check_pico2 PUBLIC c_std_11)
+        target_sources(battery_check_pico2 PRIVATE battery_check.cpp)
+        pico_add_extra_outputs(battery_check_pico2)
+        pico_enable_stdio_usb(battery_check_pico2 1)
+        pico_enable_stdio_uart(battery_check_pico2 0)
+        target_link_libraries(battery_check_pico2 pico_stdlib hardware_adc)
+        set_target_properties(battery_check_pico2 PROPERTIES SUFFIX ".elf")
+
+    endif()
+endif()
+
+======================================================================================
+
+PicoRX/external/no-OS-FatFS-SD-SDIO_SPI_RPi-Pico/src/CMakeFiles.txt:
+
+add_library(no-OS-FatFS-SD-SDIO-SPI-RPi-Pico INTERFACE)
+
+pico_generate_pio_header(no-OS-FatFS-SD-SDIO-SPI-RPi-Pico ${CMAKE_CURRENT_LIST_DIR}/sd_driver/SDIO/rp2040_sdio.pio)
+
+target_compile_definitions(no-OS-FatFS-SD-SDIO-SPI-RPi-Pico INTERFACE
+    PICO_MAX_SHARED_IRQ_HANDLERS=8u
+)
+# target_compile_options(no-OS-FatFS-SD-SDIO-SPI-RPi-Pico INTERFACE -ffile-prefix-map=${CMAKE_CURRENT_LIST_DIR}=)
+
+target_sources(no-OS-FatFS-SD-SDIO-SPI-RPi-Pico INTERFACE
+    ${CMAKE_CURRENT_LIST_DIR}/ff15/source/ff.c
+    ${CMAKE_CURRENT_LIST_DIR}/ff15/source/ffsystem.c
+    ${CMAKE_CURRENT_LIST_DIR}/ff15/source/ffunicode.c
+    ${CMAKE_CURRENT_LIST_DIR}/sd_driver/dma_interrupts.c
+    ${CMAKE_CURRENT_LIST_DIR}/sd_driver/sd_card.c
+    ${CMAKE_CURRENT_LIST_DIR}/sd_driver/sd_timeouts.c
+    ${CMAKE_CURRENT_LIST_DIR}/sd_driver/SDIO/rp2040_sdio.c
+    ${CMAKE_CURRENT_LIST_DIR}/sd_driver/SDIO/sd_card_sdio.c
+    ${CMAKE_CURRENT_LIST_DIR}/sd_driver/SPI/my_spi.c
+    ${CMAKE_CURRENT_LIST_DIR}/sd_driver/SPI/sd_card_spi.c
+    ${CMAKE_CURRENT_LIST_DIR}/sd_driver/SPI/sd_spi.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/crash.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/crc.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/f_util.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/ff_stdio.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/file_stream.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/glue.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/my_debug.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/my_rtc.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/util.c
+)
+target_include_directories(no-OS-FatFS-SD-SDIO-SPI-RPi-Pico INTERFACE
+    ff15/source
+    sd_driver
+    include
+    src/include
+    ${CMAKE_CURRENT_LIST_DIR}/include
+    ${CMAKE_CURRENT_LIST_DIR}/ff15/source
+    ${CMAKE_CURRENT_LIST_DIR}/sd_driver
+)
+
+if(PICO_RISCV)
+    set(HWDEP_LIBS hardware_watchdog)
+else()
+    set(HWDEP_LIBS cmsis_core)
+endif()
+
+target_link_libraries(no-OS-FatFS-SD-SDIO-SPI-RPi-Pico INTERFACE
+    hardware_dma
+    hardware_pio
+    hardware_spi
+    hardware_sync
+    pico_aon_timer
+    pico_stdlib
+    ${HWDEP_LIBS}
+)
+
+=============================================================================
+
+PicoRX/
+
+#include "pico/stdlib.h"
+#include <stdio.h>
+
+#include "pico/multicore.h"
+#include "pico/time.h"
+#include "hardware/exception.h"
+#include "hardware/watchdog.h"
+#include "hardware/clocks.h"
+...
+int main()
+{
+  gpio_set_function(LED, GPIO_FUNC_SIO);
+  gpio_set_dir(LED, GPIO_OUT);
+  gpio_put(LED, 1);
+	set_sys_clock_khz(125000, true); // g3zbu
+
+  // emergency bootloader mode
+  gpio_init(PIN_BACK);
+  gpio_set_dir(PIN_BACK, GPIO_IN);
+  gpio_pull_up(PIN_BACK);
+  if (gpio_get(PIN_BACK) == false) {
+    reset_usb_boot(0, 0);
+  }
+
+  stdio_init_all();
+  init_stack_watermark();
+  watchdog_enable(2000, true);
+  multicore_launch_core1(core1_main);
+
+// ensure GPIO5 is an input as I had 500-600kHz on it! G3ZBU
+	gpio_init(PIN_ENCODER_PUSH);
+	gpio_set_dir(PIN_ENCODER_PUSH, GPIO_IN);
+	gpio_pull_up(PIN_ENCODER_PUSH);
+
+  // create an alarm pool for USB streaming with highest priority (0), so
+  // that it can pre-empt the default pool
+  receiver.set_alarm_pool(alarm_pool_create(0, 16));
+  user_interface.autorestore();
+
+  bool sd_card_mounted = sdcard_init(user_interface.get_settings().global.sd_card_counter);
+  user_interface.set_sd_card_icon(sd_card_mounted);
+
+  uint32_t last_ui_update = 0;
+  uint32_t last_cat_update = 0;
+  uint32_t last_buttons_update = 0;
+  uint32_t last_waterfall_update = 0;
+  uint32_t last_stack_update = 0;
+
+  s_settings s = user_interface.get_settings();
+  bool sd_card_save = s.global.sd_card_save;
+  if (sd_card_save) {
+    const uint32_t c = sdcard_start_recording(s.channel.frequency, s.channel.mode);
+    user_interface.update_sdcard_counter(c);
+  }
+// ensure GPIO5 is an input as I had 500-600kHz on it! G3ZBU
+	gpio_init(PIN_ENCODER_PUSH);
+	gpio_set_dir(PIN_ENCODER_PUSH, GPIO_IN);
+	gpio_pull_up(PIN_ENCODER_PUSH);
+
+
+  while(1)
+  {
+...
+===================================================================================
+
