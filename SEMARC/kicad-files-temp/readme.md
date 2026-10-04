@@ -21,5 +21,10 @@ git push --set-upstream origin m0twm-add-kicad-files
 
 On the github website, the new branch automatically shows up and prompts you to submit a **pull request**:
 
-![](img/pull-request.png)
+![Pull Request](img/pull-request.png)
 
+On the next page, you get to name the pull request and set a description. Because this is a forked repository, you have to set the repository to the SEMARC one, because by default it will send a pull request to the base repository (jondawson) and you probbaly don't want that!
+
+![Pull Request Page 2](img/pull-req-page2.png)
+
+Admins get notified, and should approve the pull request as soon as possible. This is the standard approach and ensures that there are no conflicts. The files are now available on the main branch (which in this case is called master).
